@@ -9,8 +9,8 @@
 					<li><a href="#">Home</a></li>
 					<li><a href="#">All Categories</a></li>
 					<li><a href="#">Accessories</a></li>
-					<li><a href="#">Headphones</a></li>
-					<li class="active">Product name goes here</li>
+					<li><a href="#">{{product.category}}</a></li>
+					<li class="active">{{product.name}}</li>
 				</ul>
 			</div>
 		</div>
@@ -29,21 +29,17 @@
 			<!-- Product main img -->
 			<div class="col-md-5 col-md-push-2">
 				<div id="product-main-img">
-					<div class="product-preview">
-						<img src="/assets/img/product01.png" alt="">
-					</div>
-
-					<div class="product-preview">
-						<img src="/assets/img/product03.png" alt="">
-					</div>
-
-					<div class="product-preview">
-						<img src="/assets/img/product06.png" alt="">
-					</div>
-
-					<div class="product-preview">
-						<img src="/assets/img/product08.png" alt="">
-					</div>
+					<ng-template [ngIf]="thumbImages.length == 0">
+						<div class="product-preview">
+						  <img [src]="product.image" alt="{{ product.name }}">
+						</div>
+					 </ng-template>
+					 <ng-template [ngIf]="thumbImages.length > 0">
+						<div class="product-preview" *ngFor="let t of thumbImages">
+						  <img [src]="t" alt="{{ product.name }}">
+						</div>
+					 </ng-template>
+					
 				</div>
 			</div>
 			<!-- /Product main img -->
@@ -51,21 +47,16 @@
 			<!-- Product thumb imgs -->
 			<div class="col-md-2  col-md-pull-5">
 				<div id="product-imgs">
-					<div class="product-preview">
-						<img src="/assets/img/product01.png" alt="">
-					</div>
-
-					<div class="product-preview">
-						<img src="/assets/img/product03.png" alt="">
-					</div>
-
-					<div class="product-preview">
-						<img src="/assets/img/product06.png" alt="">
-					</div>
-
-					<div class="product-preview">
-						<img src="/assets/img/product08.png" alt="">
-					</div>
+					<ng-template [ngIf]="thumbImages.length > 0">
+						<div class="product-preview" *ngFor="let t of thumbImages">
+						  <img [src]="t" alt="{{ product.name }}">
+						</div>
+					 </ng-template>
+					 <ng-template [ngIf]="thumbImages.length == 0">
+						<div class="product-preview">
+						  <img [src]="product.image" alt="{{ product.name }}">
+						</div>
+					</ng-template>
 				</div>
 			</div>
 			<!-- /Product thumb imgs -->
@@ -73,7 +64,7 @@
 			<!-- Product details -->
 			<div class="col-md-5">
 				<div class="product-details">
-					<h2 class="product-name">product name goes here</h2>
+					<h2 class="product-name">{{product.name}}</h2>
 					<div>
 						<div class="product-rating">
 							<i class="fa fa-star"></i>
@@ -85,10 +76,10 @@
 						<a class="review-link" href="#">10 Review(s) | Add your review</a>
 					</div>
 					<div>
-						<h3 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h3>
+						<h3 class="product-price">{{ product.price | currency: 'USD' }} <!-- <del class="product-old-price">$990.00</del> --></h3>
 						<span class="product-available">In Stock</span>
 					</div>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					<p>{{ product.description }}</p>
 
 					<div class="product-options">
 						<label>
@@ -109,12 +100,16 @@
 						<div class="qty-label">
 							Qty
 							<div class="input-number">
-								<input type="number">
-								<span class="qty-up">+</span>
-								<span class="qty-down">-</span>
+								<input type="number" [max]="product?.quantity >= 1 ? product?.quantity : 0"
+								[min]="1"
+								readonly
+								#quantity
+								value="{{ product?.quantity >= 1 ? 1 : 0 }}">
+								<span class="qty-up" (click)="Increase()">+</span>
+								<span class="qty-down" (click)="Decrease()">-</span>
 							</div>
 						</div>
-						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+						<button class="add-to-cart-btn" (click)="addToCart(product?.id)"><i class="fa fa-shopping-cart"></i> Добавить в корзину</button>
 					</div>
 
 					<ul class="product-btns">

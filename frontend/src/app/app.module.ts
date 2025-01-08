@@ -15,6 +15,8 @@ import { ThankyouComponent } from './components/thankyou/thankyou.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { LoginComponent } from './components/login/login.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { ToastrModule } from 'ngx-toastr';
     HomeComponent,
     ProductComponent,
     ThankyouComponent,
+    LoginComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

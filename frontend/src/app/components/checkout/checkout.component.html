@@ -1,3 +1,12 @@
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+>
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
 <!-- BREADCRUMB -->
 <div id="breadcrumb" class="section">
 	<!-- container -->
@@ -19,7 +28,7 @@
 <!-- /BREADCRUMB -->
 
 <!-- SECTION -->
-<div class="section">
+<div class="section" *ngIf="cartTotal > 0">
 	<!-- container -->
 	<div class="container">
 		<!-- row -->
@@ -130,14 +139,11 @@
 						<div><strong>TOTAL</strong></div>
 					</div>
 					<div class="order-products">
-						<div class="order-col">
-							<div>1x Product Name Goes Here</div>
-							<div>$980.00</div>
+						<div class="order-col" *ngFor="let c of cartData.data">
+							<div>{{c.numInCart}} x {{c.product!.name}}</div>
+							<div>{{(c.product!.price * c.numInCart) | currency:'USD'}}</div>
 						</div>
-						<div class="order-col">
-							<div>2x Product Name Goes Here</div>
-							<div>$980.00</div>
-						</div>
+						
 					</div>
 					<div class="order-col">
 						<div>Shiping</div>
@@ -145,7 +151,7 @@
 					</div>
 					<div class="order-col">
 						<div><strong>TOTAL</strong></div>
-						<div><strong class="order-total">$2940.00</strong></div>
+						<div><strong class="order-total">{{cartTotal | currency:'USD'}}</strong></div>
 					</div>
 				</div>
 				<div class="payment-method">
@@ -187,7 +193,14 @@
 						I've read and accept the <a href="#">terms & conditions</a>
 					</label>
 				</div>
-				<a href="#" class="primary-btn order-submit">Place order</a>
+				<button class="primary-btn btn-block order-submit" (click)="onCheckout()"
+				[disabled]="cartTotal <= 0"
+				[class.disabled]="cartTotal<=0">Сделать заказ</button>
+				<!-- <button class="btn btn-outline-danger btn-sm my-2 btn-block order-submit"
+				(click)="onCheckout()"
+				[disabled]="cartTotal <= 0"
+				[class.disabled]="cartTotal<=0"
+	 >Сделать заказ</button> -->
 			</div>
 			<!-- /Order Details -->
 		</div>
@@ -196,3 +209,8 @@
 	<!-- /container -->
 </div>
 <!-- /SECTION -->
+
+<div class="text-center my-5" *ngIf="cartData.total <= 0;">
+	<h4>Ваша корзина пуста</h4>
+	<button class="btn btn-primary btn-lg mt-3" routerLink="/">Вернуться к покупкам</button>
+ </div>

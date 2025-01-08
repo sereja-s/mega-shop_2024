@@ -222,18 +222,14 @@ export class CartService {
       localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
       this.cartData$.next({ ...this.cartDataServer });
     } else {
-      data.numInCart--;
-      if (data.numInCart < 1) {
-        // УДАЛИТЬ ТОВАР ИЗ КОРЗИНЫ
-        this.DeleteProductFromCart(index);
-        this.cartData$.next({ ...this.cartDataServer });
-      } else {
+      if (data.numInCart > 1) {
+        data.numInCart--;
+
         this.cartData$.next({ ...this.cartDataServer });
         this.cartDataClient.prodData[index].incart = data.numInCart;
 
         // ОБНОВИТЬ ОБЩУЮ СУММУ
         this.CalculateTotal();
-
         this.cartDataClient.total = this.cartDataServer.total;
         localStorage.setItem('cart', JSON.stringify(this.cartDataClient));
       }
@@ -241,13 +237,21 @@ export class CartService {
   }
 
   DeleteProductFromCart(index: number) {
-    if (window.confirm('Вы уверены, что хотите удалить товар ?')) {
+    if (!window.confirm('Вы уверены, что хотите удалить товар ?')) {
+      // ОТОБРАЗИМ ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ
+      this.toast.success(`не удалён`, 'Товар', {
+        timeOut: 3000,
+        progressBar: true,
+        progressAnimation: 'increasing',
+        positionClass: 'toast-top-right',
+      });
+      return;
+    } else {
       this.cartDataServer.data.splice(index, 1);
       this.cartDataClient.prodData.splice(index, 1);
 
       // ОБНОВИТЬ ОБЩУЮ СУММУ
       this.CalculateTotal();
-
       this.cartDataClient.total = this.cartDataServer.total;
 
       // Обнулим данные о корзине для клиента, если общая сумма будет равна нулю
@@ -281,8 +285,6 @@ export class CartService {
       } else {
         this.cartData$.next({ ...this.cartDataServer });
       }
-    } else {
-      return;
     }
   }
 

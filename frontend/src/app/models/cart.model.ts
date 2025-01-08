@@ -1,14 +1,14 @@
 import { ProductModelServer } from './product.model';
 
 /**
- * Модель со скрытими данными о корзине для работы с сервером
+ * Модель со скрытими от клиента данными о корзине (для работы с сервером)
  */
 export interface CartModelServer {
   total: number;
-  /** скрытая полная информация о товаре и его количестве для работы с сервером */
+  /** скрытая полная информация о товаре и его количестве (для работы с сервером) */
   data: [
     {
-      product: ProductModelServer | undefined;
+      product?: ProductModelServer;
       numInCart: number;
     }
   ];
